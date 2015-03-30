@@ -1,0 +1,10 @@
+<h1>Blog</h1>
+
+<?php foreach( $this->posts as $post ){ ?>
+	<article>
+		<h2 id="post-<?php echo $post->getId(); ?>"><?php echo $post->getTitle(); ?></h2>
+		<p>
+			<?php echo $post->getText(); ?>
+		</p>
+	</article>
+<?php } ?>
