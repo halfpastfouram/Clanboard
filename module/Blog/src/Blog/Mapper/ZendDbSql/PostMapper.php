@@ -1,8 +1,9 @@
 <?php
 
-namespace Blog\Mapper;
+namespace Blog\Mapper\ZendDbSql;
 
-use Blog\Model\CategoryInterface;
+use Blog\Mapper\PostMapperInterface;
+use Blog\Model\PostInterface;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
@@ -10,10 +11,10 @@ use Zend\Db\Sql\Sql;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**
- * Class CategoryZendDbSqlMapper
+ * Class PostMapper
  * @package Blog\Mapper
  */
-class CategoryZendDbSqlMapper implements CategoryMapperInterface
+class PostMapper implements PostMapperInterface
 {
 	/**
 	 * @var \Zend\Db\Adapter\AdapterInterface
@@ -26,23 +27,23 @@ class CategoryZendDbSqlMapper implements CategoryMapperInterface
 	protected $_hydrator;
 
 	/**
-	 * @var \Blog\Model\CategoryInterface
+	 * @var \Blog\Model\PostInterface
 	 */
-	protected $_categoryPrototype;
+	protected $_postPrototype;
 
 	/**
 	 * @param \Zend\Db\Adapter\AdapterInterface       $adapter
 	 * @param \Zend\Stdlib\Hydrator\HydratorInterface $hydrator
-	 * @param \Blog\Model\CategoryInterface           $categoryPrototype
+	 * @param \Blog\Model\PostInterface               $postPrototype
 	 */
 	public function __construct(
 		AdapterInterface $adapter,
 		HydratorInterface $hydrator,
-		CategoryInterface $categoryPrototype
+		PostInterface $postPrototype
 	) {
 		$this->_dbAdapter		= $adapter;
 		$this->_hydrator		= $hydrator;
-		$this->_postPrototype	= $categoryPrototype;
+		$this->_postPrototype	= $postPrototype;
 	}
 
 	/**
@@ -51,7 +52,7 @@ class CategoryZendDbSqlMapper implements CategoryMapperInterface
 	public function find( $id )
 	{
 		$sql    = new Sql( $this->_dbAdapter );
-		$select	= $sql->select( 'blog__category' );
+		$select	= $sql->select( 'blog__post' );
 		$select->where( array( 'id = ?' => $id ) );
 
 		$statement	= $sql->prepareStatementForSqlObject( $select );
@@ -61,7 +62,28 @@ class CategoryZendDbSqlMapper implements CategoryMapperInterface
 			return $this->_hydrator->hydrate( $result->current(), $this->_postPrototype );
 		}
 
-		throw new \InvalidArgumentException( "Category with given id '{$id}' not found." );
+		throw new \InvalidArgumentException( "Post with given id '{$id}' not found." );
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function findByCategory( $categoryId )
+	{
+		$sql	= new Sql( $this->_dbAdapter );
+		$select	= $sql->select( 'blog__post' )
+			->where( array( 'category_id = ?' => $categoryId ) );
+
+		$statement	= $sql->prepareStatementForSqlObject( $select );
+		$result		= $statement->execute();
+
+		if( $result instanceof ResultInterface && $result->isQueryResult() ) {
+			$resultSet	= new HydratingResultSet( $this->_hydrator, $this->_postPrototype );
+
+			return $resultSet->initialize( $result );
+		}
+
+		throw new \InvalidArgumentException( "Post with given category id '{$categoryId}' not found." );
 	}
 
 	/**
@@ -70,7 +92,7 @@ class CategoryZendDbSqlMapper implements CategoryMapperInterface
 	public function findAll()
 	{
 		$sql	= new Sql( $this->_dbAdapter );
-		$statement	= $sql->prepareStatementForSqlObject( $sql->select( 'blog__category' ) );
+		$statement	= $sql->prepareStatementForSqlObject( $sql->select( 'blog__post' ) );
 		$result		= $statement->execute();
 
 		if( $result instanceof ResultInterface && $result->isQueryResult() ) {

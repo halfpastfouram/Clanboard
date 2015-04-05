@@ -1,0 +1,10 @@
+<article id="post-<?php echo $post->getId(); ?>">
+	<h1><?php echo $post->getTitle(); ?></h1>
+	<div class="category">
+		<?php $url = $this->url( 'blog', array( 'action' => 'category', 'id' => $category->getId() ) ); ?>
+		Category: <a href="<?php echo $url; ?>"><?php echo $category->getTitle(); ?></a>
+	</div>
+	<p>
+		<?php echo $post->getText(); ?>
+	</p>
+</article>

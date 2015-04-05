@@ -3,6 +3,7 @@
 namespace Blog\Service;
 
 use Blog\Mapper\CategoryMapperInterface;
+use Blog\Model\CategoryInterface;
 
 /**
  * Class PostService
@@ -16,7 +17,7 @@ class CategoryService implements CategoryServiceInterface
 	protected $_categoryMapper;
 
 	/**
-	 * @param \Blog\Service\CategoryMapperInterface $categoryMapper
+	 * @param CategoryMapperInterface $categoryMapper
 	 */
 	public function __construct( CategoryMapperInterface $categoryMapper )
 	{
@@ -37,5 +38,45 @@ class CategoryService implements CategoryServiceInterface
 	public function findCategory( $id )
 	{
 		return $this->_categoryMapper->find( $id );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findCategoryTree()
+	{
+		return $this->_categoryMapper->findTree();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findCategoryPath( $toId, $fromId = null )
+	{
+		return $this->_categoryMapper->findPath( $toId, $fromId );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findCategoryChildren( $parentId, $depth = 1 )
+	{
+		return $this->_categoryMapper->findChildren( $parentId, $depth );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function saveCategory( CategoryInterface $category )
+	{
+		$this->_categoryMapper->save( $category );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function deleteCategory( $categoryId )
+	{
+		$this->_categoryMapper->delete( $categoryId );
 	}
 }

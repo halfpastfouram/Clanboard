@@ -18,6 +18,11 @@ class Category implements CategoryInterface
 	protected $_parentCategoryId;
 
 	/**
+	 * @var int
+	 */
+	protected $_depth;
+
+	/**
 	 * @var string
 	 */
 	protected $_title;
@@ -100,6 +105,25 @@ class Category implements CategoryInterface
 	public function setDescription( $description )
 	{
 		$this->_description	= $description;
+		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getDepth()
+	{
+		return $this->_depth;
+	}
+
+	/**
+	 * @param int $depth
+	 *
+	 * @return $this
+	 */
+	public function setDepth( $depth )
+	{
+		$this->_depth = $depth;
 		return $this;
 	}
 }

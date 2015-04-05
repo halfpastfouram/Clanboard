@@ -35,4 +35,11 @@ interface CategoryInterface
 	 * @return string
 	 */
 	public function getDescription();
+
+	/**
+	 * Will return the depth of the category
+	 *
+	 * @return int
+	 */
+	public function getDepth();
 }

@@ -41,18 +41,34 @@ class ListController extends AbstractActionController
 	public function indexAction()
 	{
 		return new ViewModel( array(
-			'posts'	=> $this->_postService->findAllPosts()
+			'posts'			=> $this->_postService->findAllPosts(),
+			'categories'	=> $this->_categoryService->findCategoryTree()
 		) );
 	}
 
+	/**
+	 * @return \Zend\View\Model\ViewModel
+	 */
+	public function categoriesAction()
+	{
+		return new ViewModel( array(
+			'categories'	=> $this->_categoryService->findCategoryTree()
+		) );
+	}
+
+	/**
+	 * @return \Zend\View\Model\ViewModel
+	 */
 	public function categoryAction()
 	{
-		$categoryId	= $this->params()->fromRoute( 'category', 0 );
+		$categoryId	= $this->params()->fromRoute( 'id', 0 );
 		$category	= $this->_categoryService->findCategory( $categoryId );
+		$posts		= $this->_postService->findByCategory( $categoryId );
 
 		return new ViewModel( array(
-			'category'	=> $category,
-			'posts'		=> $this->_postService->findByCategory( $categoryId )
+			'categories'	=> $this->_categoryService->findCategoryTree(),
+			'category'		=> $category,
+			'posts'			=> $posts
 		) );
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Blog\Factory;
 
-use Blog\Mapper\CategoryZendDbSqlMapper;
+use Blog\Mapper\ZendDbSql\CategoryClosureMapper;
 use Blog\Model\Category;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -21,9 +21,11 @@ class CategoryZendDbSqlMapperFactory implements FactoryInterface
 	 */
 	public function createService( ServiceLocatorInterface $serviceLocator )
 	{
-		return new CategoryZendDbSqlMapper(
-			$serviceLocator->get( 'Zend\Db\Adapter\Adapter' ),
-			new ClassMethods( false ),
+		/** @var \Zend\Db\Adapter\Adapter $adapter */
+		$adapter	= $serviceLocator->get( 'Zend\Db\Adapter\Adapter' );
+		return new CategoryClosureMapper(
+			$adapter,
+			new ClassMethods,
 			new Category
 		);
 	}

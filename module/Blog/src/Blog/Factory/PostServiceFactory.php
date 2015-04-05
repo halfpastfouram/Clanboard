@@ -21,8 +21,8 @@ class PostServiceFactory implements FactoryInterface
 	 */
 	public function createService( ServiceLocatorInterface $serviceLocator )
 	{
-		return new PostService(
-			$serviceLocator->get( 'Blog\Mapper\PostMapperInterface' )
-		);
+		/** @var \Blog\Mapper\PostMapperInterface $mapperService */
+		$mapperService	= $serviceLocator->get( 'Blog\Mapper\PostMapperInterface' );
+		return new PostService( $mapperService );
 	}
 }

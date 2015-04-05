@@ -1,10 +1,10 @@
-<h1>Blog</h1>
+<h1>Blog: <?php echo $category->getTitle(); ?></h1>
 
 <div class="posts">
 	<?php foreach( $this->posts as $post ){ ?>
 		<article id="post-<?php echo $post->getId(); ?>">
 			<h2>
-				<?php $url = $this->url( 'blog', array( 'action' => 'post', 'id' => $post->getId() ) ); ?>
+				<?php $url = $this->url( 'post', array( 'action' => 'post', 'id' => $post->getId() ) ); ?>
 				<a href="<?php echo $url; ?>"><?php echo $post->getTitle(); ?></a>
 			</h2>
 			<p>

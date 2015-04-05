@@ -2,7 +2,7 @@
 
 namespace Blog\Factory;
 
-use Blog\Mapper\PostZendDbSqlMapper;
+use Blog\Mapper\ZendDbSql\PostMapper;
 use Blog\Model\Post;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -17,13 +17,15 @@ class PostZendDbSqlMapperFactory implements FactoryInterface
 	/**
 	 * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
 	 *
-	 * @return \Blog\Mapper\PostZendDbSqlMapper
+	 * @return \Blog\Mapper\ZendDbSql\PostMapper
 	 */
 	public function createService( ServiceLocatorInterface $serviceLocator )
 	{
-		return new PostZendDbSqlMapper(
-			$serviceLocator->get( 'Zend\Db\Adapter\Adapter' ),
-			new ClassMethods( false ),
+		/** @var \Zend\Db\Adapter\Adapter $adapter */
+		$adapter	= $serviceLocator->get( 'Zend\Db\Adapter\Adapter' );
+		return new PostMapper(
+			$adapter,
+			new ClassMethods,
 			new Post
 		);
 	}

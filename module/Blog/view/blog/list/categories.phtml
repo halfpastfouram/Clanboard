@@ -1,0 +1,31 @@
+<h1>Blog: categories</h1>
+
+<div class="category-list">
+	<?php
+		$url	= $this->url( 'blog', array( 'action' => 'category' ) );
+		$format	= <<<HTML
+<li id="category-%1\$d">
+	<div class="title"><a href="{$url}/%1\$d">%2\$s</a></div>
+	<ul class="children" style="margin: 0 0 0 25px;">
+		%3\$s
+	</ul>
+</li>
+HTML;
+
+		function parseTree( array $tree, $format )
+		{
+			$childrenHtml	= '';
+			foreach( $tree as $branch ) {
+				$childrenHtml	.= vsprintf( $format, array(
+					$branch['item']->getId(),
+					$branch['item']->getTitle(),
+					parseTree( $branch['children'], $format )
+				) );
+			}
+			return $childrenHtml;
+		}
+	?>
+	<ul>
+		<?php echo parseTree( $this->categories, $format ); ?>
+	</ul>
+</div>
